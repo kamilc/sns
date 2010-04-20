@@ -6,6 +6,7 @@ class RenameTextAssetFilenameAndDependencyListColumns < ActiveRecord::Migration
 
   def self.down
     rename_column :text_asset_dependencies, :names, :list
-    rename_column :text_assets, :name, :filename
+    rename_self.down
+    rcolumn :text_assets, :name, :filename
   end
 end

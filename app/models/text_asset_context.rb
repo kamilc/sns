@@ -1,11 +1,17 @@
 class TextAssetContext < Radius::Context
 
   def initialize(text_asset)
+    @show_errors = true
     super()
     globals.text_asset = text_asset
     text_asset.tags.each do |name|
       define_tag(name) { |tag_binding| text_asset.render_tag(name, tag_binding) }
     end
+  end
+
+
+  def show_errors=(value)
+    @show_errors = value
   end
 
 
@@ -28,7 +34,7 @@ class TextAssetContext < Radius::Context
   private
 
     def raise_errors?
-      RAILS_ENV != 'production'
+      RAILS_ENV != 'production' && @show_errors
     end
 
 end

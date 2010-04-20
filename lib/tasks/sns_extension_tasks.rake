@@ -14,24 +14,7 @@ namespace :radiant do
       task :migrate => :environment do
         require 'radiant/extension_migrator'
         if ENV["VERSION"]
-          if [2, 3, 4].include? ENV["VERSION"].to_i
-            puts "\n                          * * * *  NOTICE  * * * *"
-            puts "\n    Some of the older functionality of SnS has been removed and as a result"
-            puts "   several of the middle migrations no longer produce their previous results."
-            puts "\n         This isn't an issue when you're just passing through, but you"
-            puts "         can no longer safely stop at migration levels 002-004 anymore."
-            puts "\n                         Your migration will not be run."
-            puts "\n        P.S. If you really must revert to one of these older migrations"
-            puts "        (levels 002-004), you'll first need to down-migrate to level 001,"
-            puts "        then install the older version of SnS and use that to migrate up."
-            puts "\n                    See db\\migrate\\README for more info."
-            puts "\n                          * * * * * *  * * * * * *\n\n"
-            puts "Press any key to acknowledge and cancel this migration(s):"
-            STDIN.gets
-            raise "Invalid Migration Level Error"
-          else
-            SnsExtension.migrator.migrate(ENV["VERSION"].to_i)
-          end
+          SnsExtension.migrator.migrate(ENV["VERSION"].to_i)
         else
           SnsExtension.migrator.migrate
         end
@@ -111,6 +94,9 @@ namespace :radiant do
           puts "    js_mime            Sets the server's javascript_mime_type"
           puts "    reset_all          Restores all settings to the factory original"
           puts
+          puts "The current value for TEXT_ASSET_CACHE_DIR is displayed here for your"
+          puts "convenience but it cannot be changed. If you must change it, you can"
+          puts "via the sns_extension.rb file. Doing so requires restarting Radiant."
 
         else
           # iterate through each argument and verify each is well-formed
@@ -146,6 +132,7 @@ namespace :radiant do
         Sns::Config.to_hash.to_a.sort_by { |pair| pair[0] }.each do |pair|
           puts %{    #{pair[0].to_s.ljust(24)} "#{pair[1].to_s}"}
         end
+        puts %{\n    TEXT_ASSET_CACHE_DIR     "#{TEXT_ASSET_CACHE_DIR}"}
       end
 
     end

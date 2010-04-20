@@ -1,3 +1,5 @@
 class Stylesheet < TextAsset
-  include TextAssetStandardTags
+
+	object_id_attr :filter, StylesheetFilter
+
 end
